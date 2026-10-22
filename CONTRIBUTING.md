@@ -17,17 +17,17 @@ For releases, bump `cloudflared/config.json`, the Dockerfile's default `BUILD_VE
 
 ## Automatic dependency releases
 
-The scheduled `Renovate` workflow checks Docker images every hour (GitHub may delay scheduled runs). It updates cloudflared and the Alpine `BUILD_FROM` image, groups runtime updates into one PR, and bumps the patch version in both `cloudflared/config.json` and the Dockerfile's `BUILD_VERSION`. Cloudflared's calendar-version major updates are included, so a new year does not stop updates.
+The hosted Renovate GitHub app checks dependencies according to its service schedule, using `renovate.json`. It updates cloudflared and the Alpine `BUILD_FROM` image, groups runtime updates into one PR, and bumps the patch version in both `cloudflared/config.json` and the Dockerfile's `BUILD_VERSION`. Cloudflared's calendar-version major updates are included, so a new year does not stop updates.
 
 Renovate merges the PR itself on a subsequent run only after status checks pass. `platformAutomerge: false` keeps the decision with Renovate; do not disable status checks in the configuration. CI tests startup and builds/runs the image for amd64 and aarch64. A failed check leaves the PR open. No GitHub Release or prebuilt published image is needed: Supervisor builds the add-on from this repository.
 
 ### One-time GitHub setup
 
-1. Create a classic personal access token for a maintainer/bot account with write access to this repository. Use `public_repo` for this public repository (or `repo` if private). Store it as the repository Actions secret **`RENOVATE_TOKEN`**. A separate token is required so Renovate's PRs and pushes trigger CI automatically; the workflow intentionally does not use `GITHUB_TOKEN`. Renew the secret when the token expires. Also grant the `workflow` scope so Renovate can update SHA pins and version comments in GitHub Actions workflows.
+1. Install or configure the [Renovate GitHub app](https://github.com/apps/renovate) and grant it access to this repository. No personal access token, `RENOVATE_TOKEN` secret or scheduled Renovate workflow is needed.
 2. Enable Actions and squash merging in repository settings. If branch protection/rulesets apply, allow this bot to merge subject to the required checks, and account for any required human reviews. Recommended required checks are `validate`, `build (amd64)` and `build (aarch64)`. Keep those names in sync if jobs change. GitHub's separate “Allow auto-merge” setting is not needed because Renovate performs the merge itself.
-3. Push these files to the default branch, then run **Actions → Renovate → Run workflow** once, or wait for the hourly schedule. Do not also enable the hosted Renovate app for this repository.
+3. Push `renovate.json` to the default branch. The existing configuration on that branch onboards the repository; wait for the hosted app to process it and open update PRs.
 
-See the [Renovate Action authentication guide](https://github.com/renovatebot/github-action#token) and [Renovate automerge documentation](https://docs.renovatebot.com/key-concepts/automerge/).
+See the [hosted app installation guide](https://docs.renovatebot.com/getting-started/installing-onboarding/) and [Renovate automerge documentation](https://docs.renovatebot.com/key-concepts/automerge/).
 
 Once merged, Home Assistant detects the new add-on version during its repository refresh. Users can press **Update** in the add-on page, or enable the add-on's **Auto update** setting to install it automatically. **Start on boot** only starts the add-on; it does not enable updates. Use the store's **Check for updates** action to refresh manually. Source changes become available only after they are pushed/merged to the branch installed by users.
 

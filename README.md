@@ -25,6 +25,6 @@ See [documentation and troubleshooting](cloudflared/DOCS.md), [changes](cloudfla
 
 ## Updates
 
-Docker image updates are checked hourly by Renovate. Each update PR bumps the add-on version and merges automatically after validation and both architecture builds pass. Maintainers must complete the [one-time automation setup](CONTRIBUTING.md#one-time-github-setup).
+Docker image updates are checked by the hosted Renovate GitHub app. Each runtime update PR bumps the add-on version and merges automatically after validation and both architecture builds pass. Maintainers must complete the [one-time automation setup](CONTRIBUTING.md#one-time-github-setup).
 
 Home Assistant discovers merged versions when it refreshes this repository. Press **Update** on the add-on page, or enable **Auto update** there for automatic installation. You can also use the store's **Check for updates** action to refresh manually.
