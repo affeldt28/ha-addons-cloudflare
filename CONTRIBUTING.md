@@ -35,6 +35,6 @@ Automated dependency release notes are recorded in the Renovate PR and git histo
 
 ## Formatting and workflow conventions
 
-Use the shared `.editorconfig`: tabs with width 4 by default, spaces with width 2 for YAML/Terraform, LF endings, a final newline and an 80-column target. Markdown has no line-length limit and preserves trailing spaces. Keep workflow names emoji-prefixed, following the other repositories.
+Use the shared `.editorconfig`: tabs with width 4 by default, spaces with width 2 for YAML/Terraform, LF endings, a final newline and an 80-column target. Markdown has no line-length limit and preserves trailing spaces. Keep workflow and step names emoji-prefixed, following the other repositories. Every workflow step must have a descriptive name.
 
 GitHub Actions use full commit SHAs with exact release comments (`uses: owner/action@<sha> # vX.Y.Z`). Renovate's GitHub Actions manager and `helpers:pinGitHubActionDigests` preset maintain both the pin and its version comment. Action-only updates do not bump the Home Assistant add-on version; Docker runtime updates do.
