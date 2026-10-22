@@ -1,0 +1,10 @@
+configuration:
+  tunnel_token:
+    name: Tunnel token
+    description: Token for a remotely managed Cloudflare Tunnel. Paste only the token, not the installation command.
+  log_level:
+    name: Log level
+    description: Cloudflared logging verbosity. Debug logs can contain sensitive request details.
+  protocol:
+    name: Transport protocol
+    description: Keep auto unless your network requires QUIC (UDP) or HTTP/2 (TCP).

@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+options_file="${OPTIONS_FILE:-/data/options.json}"
+if ! TUNNEL_TOKEN=$(jq -er '.tunnel_token | select(type == "string" and length > 0 and (test("\\s") | not))' "$options_file"); then
+    echo "Set a tunnel_token in the add-on configuration before starting." >&2
+    exit 1
+fi
+export TUNNEL_TOKEN
+log_level=$(jq -er '.log_level // "info"' "$options_file")
+protocol=$(jq -er '.protocol // "auto"' "$options_file")
+case "$log_level" in debug|info|warn|error|fatal) ;; *) echo "Invalid log_level" >&2; exit 1 ;; esac
+case "$protocol" in auto|quic|http2) ;; *) echo "Invalid protocol" >&2; exit 1 ;; esac
+
+# exec forwards shutdown signals; the token stays out of command-line arguments.
+exec cloudflared tunnel --no-autoupdate --loglevel "$log_level" --protocol "$protocol" run
