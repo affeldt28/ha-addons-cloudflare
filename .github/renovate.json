@@ -51,6 +51,9 @@
 			],
 			"prBodyNotes": [
 				"This PR also bumps the Home Assistant add-on version. After merge, Home Assistant can discover the update when its repository refreshes."
+			],
+			"addLabels": [
+				"docker 🐳"
 			]
 		},
 		{
@@ -62,7 +65,13 @@
 				"action"
 			],
 			"groupName": "GitHub Actions",
-			"pinDigests": true
+			"pinDigests": true,
+			"addLabels": [
+				"github-actions :octocat:"
+			]
 		}
+	],
+	"labels": [
+		"dependencies 📦"
 	]
 }

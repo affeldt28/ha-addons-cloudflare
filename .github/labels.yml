@@ -1,0 +1,98 @@
+### Default GitHub labels ###
+- name: bug 🐛
+  color: "#d73a4a"
+  description: Something is broken
+  aliases:
+    - bug
+
+- name: documentation 📚
+  color: "#0075ca"
+  description: Improvements or additions to documentation
+  aliases:
+    - documentation
+
+- name: duplicate 👥
+  color: "#cfd3d7"
+  description: Similar issue or pull request already exists
+  aliases:
+    - duplicate
+
+- name: enhancement ✨
+  color: "#a2eeef"
+  description: Adding or requesting a new feature
+  aliases:
+    - enhancement
+
+- name: good first issue 🎉
+  color: "#7057ff"
+  description: Opportunity for newcoming contributors
+  aliases:
+    - good first issue
+
+- name: help wanted 🆘
+  color: "#008672"
+  description: Extra attention is needed
+  aliases:
+    - help wanted
+
+- name: invalid ⚠️
+  color: "#e4e669"
+  description: This doesn't seem right
+  aliases:
+    - invalid
+
+- name: question ❓
+  color: "#d876e3"
+  description: This is more a question for the support than an issue
+  aliases:
+    - question
+
+- name: wontfix 🙅
+  color: "#ffffff"
+  description: Nobody will work on this
+  aliases:
+    - wontfix
+
+### Automated dependency updates ###
+- name: dependencies 📦
+  color: "#d9cbbb"
+  description: Third-party library dependencies
+  aliases:
+    - dependencies
+
+- name: security 🔒
+  color: "#ee0701"
+  description: Security vulnerabilities
+  aliases:
+    - security
+
+- name: "github-actions :octocat:"
+  color: "#000000"
+  description: Pull requests that update GitHub Actions code
+  aliases:
+    - github-actions
+
+- name: breaking 💥
+  color: "#ff0000"
+  description: Pull requests that introduce breaking changes
+  aliases:
+    - breaking
+    - breaking-change
+
+- name: docker 🐳
+  color: "#1D63ED"
+  description: Pull requests that update Docker configuration
+  aliases:
+    - docker
+
+- name: kubernetes 🚢
+  color: "#326CE5"
+  description: Pull requests that update Kubernetes configuration
+  aliases:
+    - kubernetes
+
+- name: terraform 🌍
+  color: "#5C4EE8"
+  description: Pull requests that update Terraform configuration
+  aliases:
+    - terraform
