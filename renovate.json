@@ -1,55 +1,68 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
-  "enabledManagers": [
-    "dockerfile"
-  ],
-  "dependencyDashboard": false,
-  "branchPrefix": "renovate-docker/",
-  "prConcurrentLimit": 1,
-  "rebaseWhen": "behind-base-branch",
-  "automerge": true,
-  "automergeType": "pr",
-  "automergeStrategy": "squash",
-  "platformAutomerge": false,
-  "packageRules": [
-    {
-      "description": "Release a new add-on version for every Docker runtime update, including Alpine.",
-      "matchManagers": [
-        "dockerfile"
-      ],
-      "matchFileNames": [
-        "cloudflared/Dockerfile"
-      ],
-      "groupName": "add-on runtime images",
-      "groupSlug": "addon-runtime",
-      "bumpVersions": [
-        {
-          "name": "Home Assistant add-on version",
-          "filePatterns": [
-            "cloudflared/config.json"
-          ],
-          "matchStrings": [
-            "\"version\":\\s*\"(?<version>\\d+\\.\\d+\\.\\d+)\""
-          ],
-          "bumpType": "patch"
-        },
-        {
-          "name": "Docker image metadata version",
-          "filePatterns": [
-            "cloudflared/Dockerfile"
-          ],
-          "matchStrings": [
-            "ARG BUILD_VERSION=(?<version>\\d+\\.\\d+\\.\\d+)"
-          ],
-          "bumpType": "patch"
-        }
-      ],
-      "prBodyNotes": [
-        "This PR also bumps the Home Assistant add-on version. After merge, Home Assistant can discover the update when its repository refreshes."
-      ]
-    }
-  ]
+	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+	"extends": [
+		"config:recommended",
+		"helpers:pinGitHubActionDigests"
+	],
+	"enabledManagers": [
+		"dockerfile",
+		"github-actions"
+	],
+	"dependencyDashboard": false,
+	"branchPrefix": "renovate/",
+	"prConcurrentLimit": 1,
+	"rebaseWhen": "behind-base-branch",
+	"automerge": true,
+	"automergeType": "pr",
+	"automergeStrategy": "squash",
+	"platformAutomerge": false,
+	"packageRules": [
+		{
+			"description": "Release a new add-on version for every Docker runtime update, including Alpine.",
+			"matchManagers": [
+				"dockerfile"
+			],
+			"matchFileNames": [
+				"cloudflared/Dockerfile"
+			],
+			"groupName": "add-on runtime images",
+			"groupSlug": "addon-runtime",
+			"bumpVersions": [
+				{
+					"name": "Home Assistant add-on version",
+					"filePatterns": [
+						"cloudflared/config.json"
+					],
+					"matchStrings": [
+						"\"version\":\\s*\"(?<version>\\d+\\.\\d+\\.\\d+)\""
+					],
+					"bumpType": "patch"
+				},
+				{
+					"name": "Docker image metadata version",
+					"filePatterns": [
+						"cloudflared/Dockerfile"
+					],
+					"matchStrings": [
+						"ARG BUILD_VERSION=(?<version>\\d+\\.\\d+\\.\\d+)"
+					],
+					"bumpType": "patch"
+				}
+			],
+			"prBodyNotes": [
+				"This PR also bumps the Home Assistant add-on version. After merge, Home Assistant can discover the update when its repository refreshes."
+			]
+		},
+		{
+			"description": "Maintain full version comments and commit pins for GitHub Actions.",
+			"matchManagers": [
+				"github-actions"
+			],
+			"matchDepTypes": [
+				"action"
+			],
+			"groupName": "GitHub Actions",
+			"pinDigests": true
+		}
+	]
 }

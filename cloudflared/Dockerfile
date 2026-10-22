@@ -8,7 +8,7 @@ RUN chmod 0755 /usr/local/bin/run-cloudflared
 ARG BUILD_ARCH
 ARG BUILD_VERSION=1.0.0
 LABEL io.hass.type="addon" \
-    io.hass.name="Cloudflare Tunnel" \
-    io.hass.arch="${BUILD_ARCH}" \
-    io.hass.version="${BUILD_VERSION}"
+	io.hass.name="Cloudflare Tunnel" \
+	io.hass.arch="${BUILD_ARCH}" \
+	io.hass.version="${BUILD_VERSION}"
 ENTRYPOINT ["/usr/local/bin/run-cloudflared"]

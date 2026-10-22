@@ -3,8 +3,8 @@ set -eu
 
 options_file="${OPTIONS_FILE:-/data/options.json}"
 if ! TUNNEL_TOKEN=$(jq -er '.tunnel_token | select(type == "string" and length > 0 and (test("\\s") | not))' "$options_file"); then
-    echo "Set a tunnel_token in the add-on configuration before starting." >&2
-    exit 1
+	echo "Set a tunnel_token in the add-on configuration before starting." >&2
+	exit 1
 fi
 export TUNNEL_TOKEN
 log_level=$(jq -er '.log_level // "info"' "$options_file")
