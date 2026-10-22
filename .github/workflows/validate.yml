@@ -15,8 +15,14 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y jq shellcheck
       - run: sh -n cloudflared/rootfs/usr/local/bin/run-cloudflared
       - run: shellcheck cloudflared/rootfs/usr/local/bin/run-cloudflared
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate Renovate configuration
+        run: npx --yes --package renovate@44 renovate-config-validator --strict renovate.json
       - run: python3 -m unittest discover -s tools -p 'test_*.py'
   build:
+    name: build (${{ matrix.arch }})
     runs-on: ubuntu-latest
     strategy:
       matrix:

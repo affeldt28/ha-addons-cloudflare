@@ -22,3 +22,9 @@ protocol: auto
 Hostname routing is managed in Cloudflare. This add-on does not create tunnels or DNS records and does not require a Cloudflare API key.
 
 See [documentation and troubleshooting](cloudflared/DOCS.md), [changes](cloudflared/CHANGELOG.md) and [contributing](CONTRIBUTING.md). This is an independent community project, unaffiliated with Cloudflare or Home Assistant. Initial release is experimental pending validation on Home Assistant OS.
+
+## Updates
+
+Docker image updates are checked hourly by Renovate. Each update PR bumps the add-on version and merges automatically after validation and both architecture builds pass. Maintainers must complete the [one-time automation setup](CONTRIBUTING.md#one-time-github-setup).
+
+Home Assistant discovers merged versions when it refreshes this repository. Press **Update** on the add-on page, or enable **Auto update** there for automatic installation. You can also use the store's **Check for updates** action to refresh manually.

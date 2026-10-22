@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from pathlib import Path
 import subprocess
 import tempfile
@@ -46,6 +47,13 @@ class StartupTests(unittest.TestCase):
                 result = self.run_startup(options)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertNotIn('test-secret-token', result.stdout + result.stderr)
+
+    def test_release_versions_match(self):
+        config = json.loads((ROOT / 'cloudflared/config.json').read_text())
+        dockerfile = (ROOT / 'cloudflared/Dockerfile').read_text()
+        version = re.search(r'^ARG BUILD_VERSION=(.+)$', dockerfile, re.MULTILINE)
+        self.assertIsNotNone(version)
+        self.assertEqual(version.group(1), config['version'])
 
     def test_manifest(self):
         config = json.loads((ROOT / 'cloudflared/config.json').read_text())
