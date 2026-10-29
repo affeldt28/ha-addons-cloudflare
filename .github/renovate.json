@@ -6,7 +6,8 @@
 	],
 	"enabledManagers": [
 		"dockerfile",
-		"github-actions"
+		"github-actions",
+		"custom.regex"
 	],
 	"dependencyDashboard": false,
 	"branchPrefix": "renovate/",
@@ -18,39 +19,47 @@
 	"platformAutomerge": false,
 	"packageRules": [
 		{
-			"description": "Release a new add-on version for every Docker runtime update, including Alpine.",
+			"description": "Update upstream image and package versions together; reset packaging revision to 1.",
+			"matchPackageNames": [
+				"cloudflare/cloudflared"
+			],
+			"groupName": "upstream app",
+			"groupSlug": "upstream-app",
+			"addLabels": [
+				"docker 🐳"
+			]
+		},
+		{
+			"description": "Increment only the packaging revision for other runtime image updates.",
 			"matchManagers": [
 				"dockerfile"
 			],
-			"matchFileNames": [
-				"cloudflared/Dockerfile"
+			"matchPackageNames": [
+				"!cloudflare/cloudflared"
 			],
-			"groupName": "add-on runtime images",
-			"groupSlug": "addon-runtime",
+			"groupName": "packaging runtime",
+			"groupSlug": "packaging-runtime",
 			"bumpVersions": [
 				{
-					"name": "Home Assistant add-on version",
+					"name": "Packaging revision: cloudflared/config.json",
 					"filePatterns": [
 						"cloudflared/config.json"
 					],
 					"matchStrings": [
-						"\"version\":\\s*\"(?<version>\\d+\\.\\d+\\.\\d+)\""
+						"(?<prefix>\"version\":\\s*\")(?<version>\\d+\\.\\d+\\.\\d+-\\d+)(?<suffix>\")"
 					],
-					"bumpType": "patch"
+					"bumpType": "prerelease"
 				},
 				{
-					"name": "Docker image metadata version",
+					"name": "Packaging revision: cloudflared/Dockerfile",
 					"filePatterns": [
 						"cloudflared/Dockerfile"
 					],
 					"matchStrings": [
-						"ARG BUILD_VERSION=(?<version>\\d+\\.\\d+\\.\\d+)"
+						"(?<prefix>ARG BUILD_VERSION=)(?<version>\\d+\\.\\d+\\.\\d+-\\d+)(?<suffix>\\s)"
 					],
-					"bumpType": "patch"
+					"bumpType": "prerelease"
 				}
-			],
-			"prBodyNotes": [
-				"This PR also bumps the Home Assistant add-on version. After merge, Home Assistant can discover the update when its repository refreshes."
 			],
 			"addLabels": [
 				"docker 🐳"
@@ -86,5 +95,35 @@
 	],
 	"labels": [
 		"dependencies 📦"
+	],
+	"customManagers": [
+		{
+			"customType": "regex",
+			"managerFilePatterns": [
+				"/cloudflared/config\\.json$/"
+			],
+			"matchStrings": [
+				"(?<prefix>\"version\":\\s*\")(?<currentValue>\\d+\\.\\d+\\.\\d+)-\\d+(?<suffix>\")"
+			],
+			"depNameTemplate": "cloudflare/cloudflared",
+			"datasourceTemplate": "docker",
+			"versioningTemplate": "semver",
+			"extractVersionTemplate": "^v?(?<version>\\d+\\.\\d+\\.\\d+)$",
+			"autoReplaceStringTemplate": "\"version\": \"{{{newValue}}}-1\""
+		},
+		{
+			"customType": "regex",
+			"managerFilePatterns": [
+				"/cloudflared/Dockerfile$/"
+			],
+			"matchStrings": [
+				"(?<prefix>ARG BUILD_VERSION=)(?<currentValue>\\d+\\.\\d+\\.\\d+)-\\d+(?<suffix>\\s)"
+			],
+			"depNameTemplate": "cloudflare/cloudflared",
+			"datasourceTemplate": "docker",
+			"versioningTemplate": "semver",
+			"extractVersionTemplate": "^v?(?<version>\\d+\\.\\d+\\.\\d+)$",
+			"autoReplaceStringTemplate": "ARG BUILD_VERSION={{{newValue}}}-1\n"
+		}
 	]
 }

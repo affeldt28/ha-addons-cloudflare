@@ -6,7 +6,7 @@ COPY --from=cloudflared /usr/local/bin/cloudflared /usr/local/bin/cloudflared
 COPY rootfs /
 RUN chmod 0755 /usr/local/bin/run-cloudflared
 ARG BUILD_ARCH
-ARG BUILD_VERSION=1.0.1
+ARG BUILD_VERSION=2026.10.3-1
 LABEL io.hass.type="addon" \
 	io.hass.name="Cloudflare Tunnel" \
 	io.hass.arch="${BUILD_ARCH}" \

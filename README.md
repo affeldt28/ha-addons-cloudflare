@@ -25,6 +25,6 @@ See [documentation and troubleshooting](cloudflared/DOCS.md), [changes](cloudfla
 
 ## Updates
 
-Docker image updates are checked by the hosted Renovate GitHub app. Each runtime update PR bumps the add-on version. Non-major updates and cloudflared calendar-year updates merge automatically after validation and both native architecture builds pass; other major upgrades require review. The pipeline then tags the version and publishes GitHub release notes. Maintainers must complete the [one-time automation setup](CONTRIBUTING.md#one-time-github-setup).
+Docker image updates are checked by the hosted Renovate GitHub app. Versions follow `<cloudflared version>-<packaging revision>` (for example `2026.10.3-1`). Upstream updates reset the suffix to `1`; Alpine updates and packaging changes increment only the suffix. Non-major updates and cloudflared calendar-year updates merge automatically after validation and both native architecture builds pass; other major upgrades require review. The pipeline then tags the version and publishes GitHub release notes. Maintainers must complete the [one-time automation setup](CONTRIBUTING.md#one-time-github-setup).
 
 Home Assistant discovers merged versions when it refreshes this repository. Press **Update** on the add-on page, or enable **Auto update** there for automatic installation. You can also use the store's **Check for updates** action to refresh manually.

@@ -67,6 +67,10 @@ class StartupTests(unittest.TestCase):
 		)
 		self.assertIsNotNone(version)
 		self.assertEqual(version.group(1), config['version'])
+		self.assertRegex(config['version'], r'^\d+\.\d+\.\d+-[1-9]\d*$')
+		upstream = re.search(r'FROM cloudflare/cloudflared:(\d+\.\d+\.\d+) AS', dockerfile)
+		self.assertIsNotNone(upstream)
+		self.assertEqual(config['version'].rsplit('-', 1)[0], upstream.group(1))
 
 	def test_manifest(self):
 		config = json.loads((ROOT / 'cloudflared/config.json').read_text())

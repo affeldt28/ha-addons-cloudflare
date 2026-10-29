@@ -13,11 +13,11 @@ docker run --rm --entrypoint cloudflared ha-cloudflared:test --version
 
 CI checks configuration/startup behavior and builds both supported architectures. Before releasing, test installation, tunnel connection, proxy configuration, restart and shutdown on Home Assistant OS. Never commit real tunnel tokens.
 
-For releases, bump `cloudflared/config.json` and the Dockerfile's default `BUILD_VERSION`. Update the pinned upstream cloudflared image separately. Home Assistant detects updates from the manifest version when the repository refreshes.
+Versions use `<upstream>-<revision>`, for example `2026.10.3-1`. For packaging changes, increment only the revision in `cloudflared/config.json` and the Dockerfile's default `BUILD_VERSION`. An upstream update changes the version prefix and resets the revision to `1`. Home Assistant detects updates from the manifest version when the repository refreshes.
 
 ## Automatic dependency releases
 
-The hosted Renovate GitHub app checks dependencies according to its service schedule, using `.github/renovate.json`. It updates cloudflared and the Alpine `BUILD_FROM` image, groups runtime updates into one PR, and bumps the patch version in both `cloudflared/config.json` and the Dockerfile's `BUILD_VERSION`. Cloudflared's calendar-version major updates are included, so a new year does not stop updates. Other major dependency upgrades require review.
+The hosted Renovate GitHub app checks dependencies according to its service schedule, using `.github/renovate.json`. It groups cloudflared image and package-version updates in one PR, resetting the revision to `1`. Alpine updates use a separate PR and increment only the packaging revision in both `cloudflared/config.json` and `BUILD_VERSION`. Cloudflared's calendar-version major updates are included, so a new year does not stop updates. Other major dependency upgrades require review.
 
 Renovate merges the PR itself on a subsequent run only after status checks pass. `platformAutomerge: false` keeps the decision with Renovate; do not disable status checks in the configuration. CI tests startup and builds/runs the image on native amd64 and aarch64 runners, without QEMU or a separate Buildx setup. A failed check leaves the PR open. No GitHub Release or prebuilt published image is needed: Supervisor builds the add-on from this repository.
 
@@ -33,7 +33,7 @@ Once merged, Home Assistant detects the new add-on version during its repository
 
 ## Release pipeline and add-on changelog
 
-The **🐙 Pipeline** runs validation and both architecture builds on pull requests and pushes to `main`. After successful CI on `main`, it reads `cloudflared/config.json`, creates a matching `major.minor.patch` tag when absent, and calls **📋 Release**. There is no separate publish job: Home Assistant builds this add-on from source.
+The **🐙 Pipeline** runs validation and both architecture builds on pull requests and pushes to `main`. After successful CI on `main`, it reads `cloudflared/config.json`, creates a matching `<upstream>-<revision>` tag when absent, and calls **📋 Release**. There is no separate publish job: Home Assistant builds this add-on from source.
 
 The release workflow publishes GitHub-generated release notes for the version tag. It does not push commits back to `main`. Maintain `cloudflared/CHANGELOG.md` alongside manual packaging changes; Home Assistant displays that file. GitHub Releases provide the generated notes for automated dependency releases.
 
@@ -50,3 +50,5 @@ GitHub Actions use full commit SHAs with exact release comments (`uses: owner/ac
 `.github/labels.yml` contains the shared emoji labels from `home-ops`. The **🔄 Sync labels** workflow runs when that file or its workflow changes on `main`, and can also be run manually. It uses `GITHUB_TOKEN` with `issues: write`; no additional secret is needed. Like the shared workflow, `clean-labels: true` removes labels absent from the configuration, and aliases migrate the default names.
 
 Renovate applies `dependencies 📦` to its PRs, plus `docker 🐳` for runtime images or `github-actions :octocat:` for action updates.
+
+The numeric suffix is a packaging revision, not an upstream beta. Renovate uses its `prerelease` increment operation to increment that numeric suffix without changing the upstream version. Upstream version fields are tracked with regex managers and updated alongside the Docker image; base-image updates are kept separate to avoid resetting and incrementing a revision in the same PR. Action-only updates do not change the add-on version.
