@@ -41,9 +41,9 @@
 			"groupSlug": "packaging-runtime",
 			"bumpVersions": [
 				{
-					"name": "Packaging revision: cloudflared/config.json",
+					"name": "Packaging revision: cloudflared/config.yaml",
 					"filePatterns": [
-						"cloudflared/config.json"
+						"cloudflared/config.yaml"
 					],
 					"matchStrings": [
 						"(?<prefix>\"version\":\\s*\")(?<version>\\d+\\.\\d+\\.\\d+-\\d+)(?<suffix>\")"
@@ -100,7 +100,7 @@
 		{
 			"customType": "regex",
 			"managerFilePatterns": [
-				"/cloudflared/config\\.json$/"
+				"/cloudflared/config\\.yaml$/"
 			],
 			"matchStrings": [
 				"(?<prefix>\"version\":\\s*\")(?<currentValue>\\d+\\.\\d+\\.\\d+)-\\d+(?<suffix>\")"

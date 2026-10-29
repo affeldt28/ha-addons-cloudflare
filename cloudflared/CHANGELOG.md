@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026.10.6-1
+- Update cloudflared to version 2026.10.6.
+
 ## 2026.10.3-1
 
 - Align the package version with upstream and add a packaging revision suffix.
