@@ -3,7 +3,7 @@
 A community Home Assistant add-on that runs `cloudflared` to connect to a remotely managed Cloudflare Tunnel. Supports **amd64** and **aarch64**, with no inbound port forwarding and Protection mode enabled.
 
 [![Add repository to Home Assistant](https://my.home-assistant.io/badges/supervisor_add_addon_repository.svg)](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Faffeldt28%2Fha-addons-cloudflare)
-[![Validate](https://github.com/affeldt28/ha-addons-cloudflare/actions/workflows/validate.yml/badge.svg)](https://github.com/affeldt28/ha-addons-cloudflare/actions/workflows/validate.yml)
+[![Validate](https://github.com/affeldt28/ha-addons-cloudflare/actions/workflows/pipeline.yml/badge.svg)](https://github.com/affeldt28/ha-addons-cloudflare/actions/workflows/pipeline.yml)
 
 Requires Home Assistant with Supervisor (such as Home Assistant OS), a Cloudflare account and a domain configured with Cloudflare for a public hostname. Home Assistant Container does not support add-ons.
 
@@ -25,6 +25,6 @@ See [documentation and troubleshooting](cloudflared/DOCS.md), [changes](cloudfla
 
 ## Updates
 
-Docker image updates are checked by the hosted Renovate GitHub app. Each runtime update PR bumps the add-on version and merges automatically after validation and both architecture builds pass. Maintainers must complete the [one-time automation setup](CONTRIBUTING.md#one-time-github-setup).
+Docker image updates are checked by the hosted Renovate GitHub app. Each runtime update PR bumps the add-on version. Non-major updates and cloudflared calendar-year updates merge automatically after validation and both native architecture builds pass; other major upgrades require review. The pipeline then tags the version and publishes GitHub release notes. Maintainers must complete the [one-time automation setup](CONTRIBUTING.md#one-time-github-setup).
 
 Home Assistant discovers merged versions when it refreshes this repository. Press **Update** on the add-on page, or enable **Auto update** there for automatic installation. You can also use the store's **Check for updates** action to refresh manually.

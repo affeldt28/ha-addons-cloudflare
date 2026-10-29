@@ -69,6 +69,19 @@
 			"addLabels": [
 				"github-actions :octocat:"
 			]
+		},
+		{
+			"description": "Review major upgrades except cloudflared calendar-year updates.",
+			"matchUpdateTypes": [
+				"major"
+			],
+			"matchPackageNames": [
+				"!cloudflare/cloudflared"
+			],
+			"automerge": false,
+			"addLabels": [
+				"breaking 💥"
+			]
 		}
 	],
 	"labels": [
