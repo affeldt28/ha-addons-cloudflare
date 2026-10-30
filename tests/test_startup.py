@@ -6,6 +6,8 @@ import subprocess
 import tempfile
 import unittest
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / 'cloudflared/rootfs/usr/local/bin/run-cloudflared'
 
@@ -60,7 +62,7 @@ class StartupTests(unittest.TestCase):
 				)
 
 	def test_release_versions_match(self):
-		config = json.loads((ROOT / 'cloudflared/config.json').read_text())
+		config = yaml.safe_load((ROOT / 'cloudflared/config.yaml').read_text())
 		dockerfile = (ROOT / 'cloudflared/Dockerfile').read_text()
 		version = re.search(
 			r'^ARG BUILD_VERSION=(.+)$', dockerfile, re.MULTILINE
@@ -73,7 +75,7 @@ class StartupTests(unittest.TestCase):
 		self.assertEqual(config['version'].rsplit('-', 1)[0], upstream.group(1))
 
 	def test_manifest(self):
-		config = json.loads((ROOT / 'cloudflared/config.json').read_text())
+		config = yaml.safe_load((ROOT / 'cloudflared/config.yaml').read_text())
 		self.assertEqual(set(config['options']), set(config['schema']))
 		self.assertEqual(config['schema']['tunnel_token'], 'password')
 		self.assertTrue(config['init'])

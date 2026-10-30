@@ -7,7 +7,8 @@
 	"enabledManagers": [
 		"dockerfile",
 		"github-actions",
-		"custom.regex"
+		"custom.regex",
+		"pip_requirements"
 	],
 	"dependencyDashboard": true,
 	"branchPrefix": "renovate/",
@@ -46,7 +47,7 @@
 						"cloudflared/config.yaml"
 					],
 					"matchStrings": [
-						"(?<prefix>\"version\":\\s*\")(?<version>\\d+\\.\\d+\\.\\d+-\\d+)(?<suffix>\")"
+						"(?:^|\\n)version: (?<version>\\d+\\.\\d+\\.\\d+-\\d+)(?:\\r?\\n|$)"
 					],
 					"bumpType": "prerelease"
 				},
@@ -103,13 +104,13 @@
 				"/cloudflared/config\\.yaml$/"
 			],
 			"matchStrings": [
-				"(?<prefix>\"version\":\\s*\")(?<currentValue>\\d+\\.\\d+\\.\\d+)-\\d+(?<suffix>\")"
+				"(?<prefix>version: )(?<currentValue>\\d+\\.\\d+\\.\\d+)-\\d+(?<suffix>\\r?\\n|$)"
 			],
 			"depNameTemplate": "cloudflare/cloudflared",
 			"datasourceTemplate": "docker",
 			"versioningTemplate": "semver",
 			"extractVersionTemplate": "^v?(?<version>\\d+\\.\\d+\\.\\d+)$",
-			"autoReplaceStringTemplate": "\"version\": \"{{{newValue}}}-1\""
+			"autoReplaceStringTemplate": "version: {{{newValue}}}-1\n"
 		},
 		{
 			"customType": "regex",

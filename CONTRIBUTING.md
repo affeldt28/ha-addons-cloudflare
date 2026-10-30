@@ -5,26 +5,27 @@
 Run local checks:
 
 ```sh
+python3 -m pip install -r tests/requirements.txt
 sh -n cloudflared/rootfs/usr/local/bin/run-cloudflared
-python3 -m unittest discover -s tools -p 'test_*.py'
+python3 -m unittest discover -s tests -p 'test_*.py'
 docker build -t ha-cloudflared:test cloudflared
 docker run --rm --entrypoint cloudflared ha-cloudflared:test --version
 ```
 
 CI checks configuration/startup behavior and builds both supported architectures. Before releasing, test installation, tunnel connection, proxy configuration, restart and shutdown on Home Assistant OS. Never commit real tunnel tokens.
 
-Versions use `<upstream>-<revision>`, for example `2026.10.3-1`. For packaging changes, increment only the revision in `cloudflared/config.json` and the Dockerfile's default `BUILD_VERSION`. An upstream update changes the version prefix and resets the revision to `1`. Home Assistant detects updates from the manifest version when the repository refreshes.
+Versions use `<upstream>-<revision>`, for example `2026.10.3-1`. For packaging changes, increment only the revision in `cloudflared/config.yaml` and the Dockerfile's default `BUILD_VERSION`. An upstream update changes the version prefix and resets the revision to `1`. Home Assistant detects updates from the manifest version when the repository refreshes.
 
 ## Automatic dependency releases
 
-The hosted Renovate GitHub app checks dependencies according to its service schedule, using `.github/renovate.json`. It groups cloudflared image and package-version updates in one PR, resetting the revision to `1`. Alpine updates use a separate PR and increment only the packaging revision in both `cloudflared/config.json` and `BUILD_VERSION`. Cloudflared's calendar-version major updates are included, so a new year does not stop updates. Other major dependency upgrades require review.
+The hosted Renovate GitHub app checks dependencies according to its service schedule, using `.github/renovate.json`. It groups cloudflared image and package-version updates in one PR, resetting the revision to `1`. Alpine updates use a separate PR and increment only the packaging revision in both `cloudflared/config.yaml` and `BUILD_VERSION`. Cloudflared's calendar-version major updates are included, so a new year does not stop updates. Other major dependency upgrades require review.
 
 Renovate merges the PR itself on a subsequent run only after status checks pass. `platformAutomerge: false` keeps the decision with Renovate; do not disable status checks in the configuration. CI tests startup and builds/runs the image on native amd64 and aarch64 runners, without QEMU or a separate Buildx setup. A failed check leaves the PR open. No GitHub Release or prebuilt published image is needed: Supervisor builds the add-on from this repository.
 
 ### One-time GitHub setup
 
 1. Install or configure the [Renovate GitHub app](https://github.com/apps/renovate) and grant it access to this repository. No personal access token, `RENOVATE_TOKEN` secret or scheduled Renovate workflow is needed.
-2. Enable Actions and squash merging in repository settings. If branch protection/rulesets apply, allow this bot to merge subject to the required checks, and account for any required human reviews. The pipeline calls reusable validation; configure required checks using the emitted CI check names for `validate`, `build (amd64)` and `build (aarch64)`. Keep those names in sync if jobs change. GitHub's separate “Allow auto-merge” setting is not needed because Renovate performs the merge itself.
+2. Enable Actions and squash merging in repository settings. If branch protection/rulesets apply, allow this bot to merge subject to the required checks, and account for any required human reviews. The pipeline calls reusable validation; configure required checks using the emitted CI check names for `🧪 Validate (amd64)`, `🧪 Validate (aarch64)`, `build (amd64)` and `build (aarch64)`. Keep those names in sync if jobs change. GitHub's separate “Allow auto-merge” setting is not needed because Renovate performs the merge itself.
 3. Push `.github/renovate.json` to the default branch. The existing configuration on that branch onboards the repository; wait for the hosted app to process it and open update PRs.
 
 See the [hosted app installation guide](https://docs.renovatebot.com/getting-started/installing-onboarding/) and [Renovate automerge documentation](https://docs.renovatebot.com/key-concepts/automerge/).
@@ -33,7 +34,7 @@ Once merged, Home Assistant detects the new add-on version during its repository
 
 ## Release pipeline and add-on changelog
 
-The **🐙 Pipeline** runs validation and both architecture builds on pull requests and pushes to `main`. After successful CI on `main`, it reads `cloudflared/config.json`, creates a matching `<upstream>-<revision>` tag when absent, and calls **📋 Release**. There is no separate publish job: Home Assistant builds this add-on from source.
+The **🐙 Pipeline** runs validation and both architecture builds on pull requests and pushes to `main`. After successful CI on `main`, it reads `cloudflared/config.yaml`, creates a matching `<upstream>-<revision>` tag when absent, and calls **📋 Release**. There is no separate publish job: Home Assistant builds this add-on from source.
 
 The release workflow publishes GitHub-generated release notes for the version tag. It does not push commits back to `main`. Maintain `cloudflared/CHANGELOG.md` alongside manual packaging changes; Home Assistant displays that file. GitHub Releases provide the generated notes for automated dependency releases.
 

@@ -36,7 +36,7 @@ jobs:
       - name: 📖 Read add-on version
         id: version
         run: |
-          version=$(jq -er '.version' cloudflared/config.json)
+          version=$(sed -n 's/^version: //p' cloudflared/config.yaml)
           if [[ ! "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)-([1-9][0-9]*)$ ]]; then
             echo '::error::Add-on version must be upstream.version.patch-revision (for example 2026.10.3-1).'
             exit 1
