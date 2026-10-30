@@ -1,6 +1,6 @@
 ---
 name: Cloudflare Tunnel
-version: 2026.10.6-1
+version: 2026.10.7-1
 slug: cloudflared
 description: Connect Home Assistant through a remotely managed Cloudflare Tunnel.
 url: https://github.com/affeldt28/ha-addons-cloudflare/tree/main/cloudflared
