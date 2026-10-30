@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/affeldt28/ha-addons-cloudflare/main/cloudflared/logo.png" alt="Cloudflare" width="400">
+
 # Cloudflare Tunnel
 
 Reach your Home Assistant instance through your own Cloudflare hostname. Connect to a remotely managed tunnel using the official cloudflared client, with no inbound port forwarding and Protection mode enabled.
@@ -30,4 +32,4 @@ Keep Home Assistant authentication enabled. Treat the connector token as a secre
 
 [Setup, options and troubleshooting](https://github.com/affeldt28/ha-addons-cloudflare/blob/main/cloudflared/DOCS.md) · [Cloudflare documentation](https://developers.cloudflare.com/tunnel/get-started/) · [Report an issue](https://github.com/affeldt28/ha-addons-cloudflare/issues)
 
-Independent community add-on, unaffiliated with Cloudflare or Home Assistant.
+Independent community add-on, unaffiliated with Cloudflare or Home Assistant. Cloudflare artwork belongs to Cloudflare, Inc.; [source and attribution](https://github.com/affeldt28/ha-addons-cloudflare/blob/main/branding/README.md).

@@ -40,30 +40,17 @@ jobs:
         run: shellcheck cloudflared/rootfs/usr/local/bin/run-cloudflared
 
       - name: 🟢 Set up Node.js
+        if: matrix.arch == 'amd64'
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '24'
 
       - name: ✅ Validate Renovate configuration
+        if: matrix.arch == 'amd64'
         run: npx --yes --package renovate@44 renovate-config-validator --strict .github/renovate.json
 
       - name: 🧪 Run tests
         run: python3 -m unittest discover -s tests -p 'test_*.py'
-  build:
-    name: build (${{ matrix.arch }})
-    runs-on: ${{ matrix.runner }}
-    timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - arch: amd64
-            runner: ubuntu-24.04
-          - arch: aarch64
-            runner: ubuntu-24.04-arm
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: 🏗️ Build add-on image
         run: docker build --build-arg BUILD_ARCH=${{ matrix.arch }} -t ha-cloudflared:test cloudflared

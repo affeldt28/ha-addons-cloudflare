@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="cloudflared/logo.png" alt="Cloudflare" width="420">
+</p>
+
 # Cloudflare Tunnel Community Add-on for Home Assistant
 
 Connect Home Assistant to a remotely managed **Cloudflare Tunnel**. Reach your instance through a public hostname, with an outbound connection, no inbound port forwarding and Protection mode enabled.
@@ -83,4 +87,4 @@ When reporting a problem, include the add-on version, architecture, Home Assista
 
 Built around the official [cloudflared](https://github.com/cloudflare/cloudflared) client.
 
-This repository is not an official Home Assistant or Cloudflare project.
+This repository is not an official Home Assistant or Cloudflare project. Cloudflare artwork belongs to Cloudflare, Inc.; see [source and attribution](branding/README.md).
