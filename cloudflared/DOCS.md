@@ -6,7 +6,9 @@
 2. Create a Cloudflared tunnel managed by Cloudflare. From the connector installation command, copy only the token following `--token`.
 3. Paste it into `tunnel_token` in the add-on Configuration tab. Keep `log_level: info` and `protocol: auto` initially.
 4. Start the add-on. Confirm Cloudflare reports the tunnel as healthy.
-5. Add a published application route/public hostname, such as `ha.example.com`, pointing to **HTTP** service **`homeassistant:8123`**. The add-on uses the Supervisor container network; `localhost` refers to the add-on itself.
+5. Add a published application route/public hostname, such as `ha.example.com`, pointing to **HTTP** service **`homeassistant:80`**. New HAOS installations since Home Assistant 2026.8 default to port 80; older installations usually retain port 8123. Use the port configured for your installation (for example, `homeassistant:8123` or `homeassistant:8080`). The add-on uses the Supervisor container network; `localhost` refers to the add-on itself.
+
+See Home Assistant's [current port defaults](https://www.home-assistant.io/docs/configuration/remote/). The origin port is configured in Cloudflare, independently of the public HTTPS port.
 
 If Home Assistant uses HTTPS internally, choose HTTPS and configure origin certificate validation for your installation.
 
@@ -14,16 +16,9 @@ Cloudflare's [tunnel setup guide](https://developers.cloudflare.com/tunnel/get-s
 
 ## Allow the reverse proxy in Home Assistant
 
-Home Assistant requires explicit proxy trust. Merge the following into its existing `configuration.yaml` `http:` section:
+Home Assistant requires explicit proxy trust. On Home Assistant 2026.8 or later, open **Settings → System → Network → HTTP server**, enable **Trust X-Forwarded-For**, and add the connector's IP address to **Trusted proxies**. If requests return `400: Bad Request`, inspect Home Assistant's logs for the reverse proxy warning to find the connecting address.
 
-```yaml
-http:
-  use_x_forwarded_for: true
-  trusted_proxies:
-    - 172.30.33.0/24
-```
-
-This is the standard Supervisor add-on subnet; verify it matches your installation. Trusting this subnet allows other add-ons on that subnet to supply forwarded headers. For narrower trust, use the connector's actual address, but verify it after container recreation. Never trust all addresses (`0.0.0.0/0`). Validate the configuration and restart Home Assistant before opening the public hostname. See the [Home Assistant HTTP documentation](https://www.home-assistant.io/integrations/http/#reverse-proxies).
+Alternatively, add `172.30.32.0/23`, the standard Hass.io bridge network, to **Trusted proxies**; verify it matches your installation before trusting it. Trusting this network allows other containers on the bridge to supply forwarded headers. For narrower trust, use the connector's actual address, but verify it after container recreation. Never trust all addresses (`0.0.0.0/0`). Save the HTTP settings, allow Home Assistant to restart, and confirm the settings from your local connection when prompted. See the [Home Assistant HTTP documentation](https://www.home-assistant.io/integrations/http/#reverse-proxies).
 
 Set your external Home Assistant URL to the public HTTPS hostname in Home Assistant's network settings if needed. Keep Home Assistant authentication enabled. Cloudflare Access policies are optional; test companion app and webhook compatibility when enabling them.
 
@@ -41,8 +36,8 @@ Routes and origin settings are managed in Cloudflare. Local tunnel credentials f
 
 - **Missing token:** paste only the token, with no spaces or line breaks, save and restart.
 - **Tunnel disconnected:** check the token, DNS and outbound connectivity. Cloudflare Tunnel requires outbound port 7844 (UDP for QUIC or TCP for HTTP/2). Try `protocol: http2` where UDP is blocked.
-- **502 from Cloudflare:** verify the service is `http://homeassistant:8123`, Home Assistant is running, and the origin protocol matches its HTTP/TLS configuration.
-- **400 / untrusted proxy:** inspect Home Assistant logs and trust the actual connecting proxy address or the correct Supervisor add-on subnet, then restart Home Assistant.
+- **502 from Cloudflare:** verify the origin uses Home Assistant's configured port (`http://homeassistant:80` for a new HAOS installation, often `http://homeassistant:8123` for an older one), Home Assistant is running, and the origin protocol matches its HTTP/TLS configuration. An HTTP origin entered as just `homeassistant` uses port 80. Inspect the add-on log: `no such host` indicates a DNS problem, `connection refused` indicates the destination is not accepting connections at that address and port, and certificate errors indicate an HTTPS validation problem. To check whether the internal hostname is the problem, try the HAOS host's LAN IP with the same port and protocol in the Cloudflare origin URL.
+- **400 / untrusted proxy:** enable **Trust X-Forwarded-For** and add the actual connecting proxy address or the Hass.io bridge network (`172.30.32.0/23` on a standard installation) to **Trusted proxies**, then save and confirm the HTTP settings.
 - **Login/app issues:** check external URL and any Cloudflare Access policies.
 
 The add-on exposes no host ports and needs no host networking, Docker socket, Supervisor API access or additional privileges. Stop it to disconnect this connector; other replicas of the tunnel may remain active.
