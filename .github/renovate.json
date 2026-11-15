@@ -1,16 +1,15 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"extends": [
-		"config:recommended",
-		"helpers:pinGitHubActionDigests"
-	],
+	"extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
 	"enabledManagers": [
 		"dockerfile",
 		"github-actions",
 		"custom.regex",
 		"pip_requirements"
 	],
-	"dependencyDashboard": true,
+	"dependencyDashboard": {
+		"enabled": true
+	},
 	"branchPrefix": "renovate/",
 	"prConcurrentLimit": 1,
 	"rebaseWhen": "behind-base-branch",
@@ -21,31 +20,21 @@
 	"packageRules": [
 		{
 			"description": "Update upstream image and package versions together; reset packaging revision to 1.",
-			"matchPackageNames": [
-				"cloudflare/cloudflared"
-			],
+			"matchPackageNames": ["cloudflare/cloudflared"],
 			"groupName": "upstream app",
 			"groupSlug": "upstream-app",
-			"addLabels": [
-				"docker 🐳"
-			]
+			"addLabels": ["docker 🐳"]
 		},
 		{
 			"description": "Increment only the packaging revision for other runtime image updates.",
-			"matchManagers": [
-				"dockerfile"
-			],
-			"matchPackageNames": [
-				"!cloudflare/cloudflared"
-			],
+			"matchManagers": ["dockerfile"],
+			"matchPackageNames": ["!cloudflare/cloudflared"],
 			"groupName": "packaging runtime",
 			"groupSlug": "packaging-runtime",
 			"bumpVersions": [
 				{
 					"name": "Packaging revision: cloudflared/config.yaml",
-					"filePatterns": [
-						"cloudflared/config.yaml"
-					],
+					"filePatterns": ["cloudflared/config.yaml"],
 					"matchStrings": [
 						"(?:^|\\n)version: (?<version>\\d+\\.\\d+\\.\\d+-\\d+)(?:\\r?\\n|$)"
 					],
@@ -53,56 +42,36 @@
 				},
 				{
 					"name": "Packaging revision: cloudflared/Dockerfile",
-					"filePatterns": [
-						"cloudflared/Dockerfile"
-					],
+					"filePatterns": ["cloudflared/Dockerfile"],
 					"matchStrings": [
 						"(?<prefix>ARG BUILD_VERSION=)(?<version>\\d+\\.\\d+\\.\\d+-\\d+)(?<suffix>\\s)"
 					],
 					"bumpType": "prerelease"
 				}
 			],
-			"addLabels": [
-				"docker 🐳"
-			]
+			"addLabels": ["docker 🐳"]
 		},
 		{
 			"description": "Maintain full version comments and commit pins for GitHub Actions.",
-			"matchManagers": [
-				"github-actions"
-			],
-			"matchDepTypes": [
-				"action"
-			],
+			"matchManagers": ["github-actions"],
+			"matchDepTypes": ["action"],
 			"groupName": "GitHub Actions",
 			"pinDigests": true,
-			"addLabels": [
-				"github-actions :octocat:"
-			]
+			"addLabels": ["github-actions :octocat:"]
 		},
 		{
 			"description": "Review major upgrades except cloudflared calendar-year updates.",
-			"matchUpdateTypes": [
-				"major"
-			],
-			"matchPackageNames": [
-				"!cloudflare/cloudflared"
-			],
+			"matchUpdateTypes": ["major"],
+			"matchPackageNames": ["!cloudflare/cloudflared"],
 			"automerge": false,
-			"addLabels": [
-				"breaking 💥"
-			]
+			"addLabels": ["breaking 💥"]
 		}
 	],
-	"labels": [
-		"dependencies 📦"
-	],
+	"labels": ["dependencies 📦"],
 	"customManagers": [
 		{
 			"customType": "regex",
-			"managerFilePatterns": [
-				"/cloudflared/config\\.yaml$/"
-			],
+			"managerFilePatterns": ["/cloudflared/config\\.yaml$/"],
 			"matchStrings": [
 				"(?<prefix>version: )(?<currentValue>\\d+\\.\\d+\\.\\d+)-\\d+(?<suffix>\\r?\\n|$)"
 			],
@@ -114,9 +83,7 @@
 		},
 		{
 			"customType": "regex",
-			"managerFilePatterns": [
-				"/cloudflared/Dockerfile$/"
-			],
+			"managerFilePatterns": ["/cloudflared/Dockerfile$/"],
 			"matchStrings": [
 				"(?<prefix>ARG BUILD_VERSION=)(?<currentValue>\\d+\\.\\d+\\.\\d+)-\\d+(?<suffix>\\s)"
 			],
